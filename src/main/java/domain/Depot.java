@@ -62,6 +62,9 @@ public class Depot {
         if (v == null) {
             throw new IllegalArgumentException("vehicle must not be null");
         }
+        if (days <= 0) {
+            throw new IllegalArgumentException("days must be greater than zero");
+        }
         if (renters.stream().noneMatch(existing -> existing.getId() == r.getId())) {
             throw new IllegalArgumentException("renter is not registered with this depot");
         }
@@ -80,6 +83,9 @@ public class Depot {
     }
 
     public Rental returnVehicle(Vehicle v) {
+        if (v == null) {
+            throw new IllegalArgumentException("vehicle must not be null");
+        }
         List<Rental> active = rentals.stream()
                 .filter(rt -> rt.getVehicle().equals(v) && rt.isActive())
                 .toList();
