@@ -78,6 +78,9 @@ public class Vehicle {
     }
 
     public void giveBack() {
+        if (status != VehicleStatus.RENTED) {
+            throw new IllegalStateException(model + " (" + reg + ") is not currently rented");
+        }
         this.status = VehicleStatus.AVAILABLE;
     }
 }

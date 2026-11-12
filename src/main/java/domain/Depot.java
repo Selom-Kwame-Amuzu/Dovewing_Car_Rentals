@@ -50,12 +50,20 @@ public class Depot {
         return rental;
     }
 
-    public void returnVehicle(Vehicle v) {
-        v.giveBack();
-        for (Rental rt : rentals) {
-            if (rt.getVehicle().equals(v) && rt.isActive()) {
-                rt.markReturned();
-            }
+    public Rental returnVehicle(Vehicle v) {
+        List<Rental> active = rentals.stream()
+                .filter(rt -> rt.getVehicle().equals(v) && rt.isActive())
+                .toList();
+        if (active.isEmpty()) {
+            throw new IllegalStateException(v.getModel() + " (" + v.getReg() + ") is not currently rented");
         }
+        if (active.size() > 1) {
+            throw new IllegalStateException("Multiple active rentals found for " + v.getReg());
+        }
+
+        Rental rental = active.get(0);
+        v.giveBack();
+        rental.markReturned();
+        return rental;
     }
 }
