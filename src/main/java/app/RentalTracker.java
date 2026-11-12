@@ -7,6 +7,7 @@ import domain.Renter;
 import domain.RenterType;
 import domain.Vehicle;
 import domain.VehicleClass;
+import domain.VehicleUnavailableException;
 
 public class RentalTracker {
 
@@ -29,7 +30,11 @@ public class RentalTracker {
         d.returnVehicle(prado);
         printer.printReturn(prado);
 
-        printer.printRental(d.rent(ama, vitz, 2));
+        try {
+            printer.printRental(d.rent(ama, vitz, 2));
+        } catch (VehicleUnavailableException e) {
+            printer.printUnavailable(e);
+        }
 
         printer.printReport(d);
     }

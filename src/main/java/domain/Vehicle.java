@@ -71,6 +71,9 @@ public class Vehicle {
     }
 
     public void rentOut() {
+        if (status != VehicleStatus.AVAILABLE) {
+            throw new VehicleUnavailableException(model + " (" + reg + ") is not available for rent");
+        }
         this.status = VehicleStatus.RENTED;
     }
 

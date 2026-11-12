@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import domain.Depot;
 import domain.Rental;
 import domain.Vehicle;
+import domain.VehicleUnavailableException;
 
 public class ReportPrinter {
 
@@ -17,6 +18,10 @@ public class ReportPrinter {
 
     public void printReturn(Vehicle vehicle) {
         System.out.println("Returned " + vehicle.getModel() + " (" + vehicle.getReg() + ")");
+    }
+
+    public void printUnavailable(VehicleUnavailableException exception) {
+        System.out.println("Cannot rent: " + exception.getMessage());
     }
 
     public void printReport(Depot depot) {
