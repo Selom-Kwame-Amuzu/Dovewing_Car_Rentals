@@ -3,23 +3,63 @@ package domain;
 import java.math.BigDecimal;
 
 public class Vehicle {
-    public String model;
-    public String reg;
-    public BigDecimal dailyRate;
-    public BigDecimal deposit;
-    public VehicleClass category; // ECONOMY or PREMIUM
-    public VehicleStatus status;  // AVAILABLE or RENTED
-    public int id;
-    static int counter = 1;
+    private static int nextId = 1;
+
+    private final int id;
+    private final String model;
+    private final String reg;
+    private final BigDecimal dailyRate;
+    private final BigDecimal deposit;
+    private final VehicleClass category;
+    private VehicleStatus status;
 
     public Vehicle(String model, String reg, BigDecimal dailyRate, BigDecimal deposit, VehicleClass category) {
-        this.id = counter;
-        counter++;
+        this.id = nextId++;
         this.model = model;
         this.reg = reg;
         this.dailyRate = dailyRate;
         this.deposit = deposit;
         this.category = category;
+        this.status = VehicleStatus.AVAILABLE;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getReg() {
+        return reg;
+    }
+
+    public BigDecimal getDailyRate() {
+        return dailyRate;
+    }
+
+    public BigDecimal getDeposit() {
+        return deposit;
+    }
+
+    public VehicleClass getCategory() {
+        return category;
+    }
+
+    public VehicleStatus getStatus() {
+        return status;
+    }
+
+    public boolean isAvailable() {
+        return status == VehicleStatus.AVAILABLE;
+    }
+
+    public void rentOut() {
+        this.status = VehicleStatus.RENTED;
+    }
+
+    public void giveBack() {
         this.status = VehicleStatus.AVAILABLE;
     }
 }

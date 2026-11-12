@@ -3,16 +3,33 @@ package domain;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Depot {
-    public String name;
-    public List<Vehicle> vehicles = new ArrayList<>();
-    public List<Renter> renters = new ArrayList<>();
-    private List<Rental> rentals = new ArrayList<>();
+    private final String name;
+    private final List<Vehicle> vehicles = new ArrayList<>();
+    private final List<Renter> renters = new ArrayList<>();
+    private final List<Rental> rentals = new ArrayList<>();
 
     public Depot(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Vehicle> getVehicles() {
+        return Collections.unmodifiableList(vehicles);
+    }
+
+    public List<Renter> getRenters() {
+        return Collections.unmodifiableList(renters);
+    }
+
+    public List<Rental> getRentals() {
+        return Collections.unmodifiableList(rentals);
     }
 
     public void addVehicle(Vehicle v) {
@@ -27,43 +44,39 @@ public class Depot {
         BigDecimal cost = BigDecimal.ZERO;
         BigDecimal deposit = BigDecimal.ZERO;
 
-        if (v.category == VehicleClass.ECONOMY) {
-            cost = v.dailyRate.multiply(BigDecimal.valueOf(days));
-            deposit = v.deposit;
-            if (r.kind == RenterType.MEMBER) {
+        if (v.getCategory() == VehicleClass.ECONOMY) {
+            cost = v.getDailyRate().multiply(BigDecimal.valueOf(days));
+            deposit = v.getDeposit();
+            if (r.getKind() == RenterType.MEMBER) {
                 deposit = BigDecimal.ZERO;
             }
-            v.status = VehicleStatus.RENTED;
-            System.out.println("Rented " + v.model + " (" + v.reg + ") to " + r.name
+            v.rentOut();
+            System.out.println("Rented " + v.getModel() + " (" + v.getReg() + ") to " + r.getName()
                     + " for " + days + " days, cost GHS " + cost.setScale(2, RoundingMode.HALF_UP)
                     + ", deposit GHS " + deposit.setScale(2, RoundingMode.HALF_UP));
-        } else if (v.category == VehicleClass.PREMIUM) {
-            cost = v.dailyRate.multiply(BigDecimal.valueOf(days));
-            deposit = v.deposit;
-            if (r.kind == RenterType.MEMBER) {
+        } else if (v.getCategory() == VehicleClass.PREMIUM) {
+            cost = v.getDailyRate().multiply(BigDecimal.valueOf(days));
+            deposit = v.getDeposit();
+            if (r.getKind() == RenterType.MEMBER) {
                 deposit = BigDecimal.ZERO;
             }
-            v.status = VehicleStatus.RENTED;
-            System.out.println("Rented " + v.model + " (" + v.reg + ") to " + r.name
+            v.rentOut();
+            System.out.println("Rented " + v.getModel() + " (" + v.getReg() + ") to " + r.getName()
                     + " for " + days + " days, cost GHS " + cost.setScale(2, RoundingMode.HALF_UP)
                     + ", deposit GHS " + deposit.setScale(2, RoundingMode.HALF_UP));
         }
-        r.history.add("Rented " + v.model);
-        rentals.add(new Rental(r.name, v.reg, days, cost, deposit));
+        r.addHistoryEntry("Rented " + v.getModel());
+        rentals.add(new Rental(r.getName(), v.getReg(), days, cost, deposit));
     }
 
     public void returnVehicle(Vehicle v) {
-        v.status = VehicleStatus.AVAILABLE;
+        v.giveBack();
         for (Rental rt : rentals) {
-            if (rt.vehicleReg.equals(v.reg) && rt.status == RentalStatus.ACTIVE) {
-                rt.status = RentalStatus.RETURNED;
+            if (rt.getVehicleReg().equals(v.getReg()) && rt.isActive()) {
+                rt.markReturned();
             }
         }
-        System.out.println("Returned " + v.model + " (" + v.reg + ")");
-    }
-
-    public List<Rental> getRentals() {
-        return rentals;
+        System.out.println("Returned " + v.getModel() + " (" + v.getReg() + ")");
     }
 
     public void printReport() {
@@ -71,13 +84,13 @@ public class Depot {
         System.out.println("=== " + name + " - end of day ===");
         System.out.println("Fleet status:");
         for (Vehicle v : vehicles) {
-            System.out.println("  " + v.model + " (" + v.reg + ", " + v.category + "): " + v.status);
+            System.out.println("  " + v.getModel() + " (" + v.getReg() + ", " + v.getCategory() + "): " + v.getStatus());
         }
         System.out.println("Active rentals:");
         for (Rental rt : rentals) {
-            if (rt.status == RentalStatus.ACTIVE) {
-                System.out.println("  Rental #" + rt.id + ": " + rt.vehicleReg + " -> " + rt.renterName
-                        + " (" + rt.days + " days)");
+            if (rt.isActive()) {
+                System.out.println("  Rental #" + rt.getId() + ": " + rt.getVehicleReg() + " -> " + rt.getRenterName()
+                        + " (" + rt.getDays() + " days)");
             }
         }
     }
