@@ -6,17 +6,17 @@ public class Rental {
     private static int nextId = 1;
 
     private final int id;
-    private final String renterName;
-    private final String vehicleReg;
+    private final Renter renter;
+    private final Vehicle vehicle;
     private final int days;
     private final BigDecimal cost;
     private final BigDecimal deposit;
     private RentalStatus status;
 
-    public Rental(String renterName, String vehicleReg, int days, BigDecimal cost, BigDecimal deposit) {
+    public Rental(Renter renter, Vehicle vehicle, int days, BigDecimal cost, BigDecimal deposit) {
         this.id = nextId++;
-        this.renterName = renterName;
-        this.vehicleReg = vehicleReg;
+        this.renter = renter;
+        this.vehicle = vehicle;
         this.days = days;
         this.cost = cost;
         this.deposit = deposit;
@@ -27,12 +27,12 @@ public class Rental {
         return id;
     }
 
-    public String getRenterName() {
-        return renterName;
+    public Renter getRenter() {
+        return renter;
     }
 
-    public String getVehicleReg() {
-        return vehicleReg;
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
     public int getDays() {

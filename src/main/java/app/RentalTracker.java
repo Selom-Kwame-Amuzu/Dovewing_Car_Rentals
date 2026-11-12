@@ -12,6 +12,7 @@ public class RentalTracker {
 
     public static void main(String[] args) {
         Depot d = new Depot("Dovewing Car Rentals");
+        ReportPrinter printer = new ReportPrinter();
 
         Vehicle vitz = new Vehicle("Toyota Vitz", "GT-1234-20", new BigDecimal("150.00"), new BigDecimal("500.00"), VehicleClass.ECONOMY);
         Vehicle prado = new Vehicle("Toyota Prado", "GR-5678-22", new BigDecimal("600.00"), new BigDecimal("2000.00"), VehicleClass.PREMIUM);
@@ -23,12 +24,13 @@ public class RentalTracker {
         d.addRenter(kofi);
         d.addRenter(ama);
 
-        d.rent(kofi, vitz, 3);
-        d.rent(ama, prado, 2);
+        printer.printRental(d.rent(kofi, vitz, 3));
+        printer.printRental(d.rent(ama, prado, 2));
         d.returnVehicle(prado);
+        printer.printReturn(prado);
 
-        d.rent(ama, vitz, 2);
+        printer.printRental(d.rent(ama, vitz, 2));
 
-        d.printReport();
+        printer.printReport(d);
     }
 }

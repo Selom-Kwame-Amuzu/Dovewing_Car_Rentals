@@ -1,7 +1,6 @@
 package domain;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,57 +39,22 @@ public class Depot {
         renters.add(r);
     }
 
-    public void rent(Renter r, Vehicle v, int days) {
-        BigDecimal cost = BigDecimal.ZERO;
-        BigDecimal deposit = BigDecimal.ZERO;
+    public Rental rent(Renter r, Vehicle v, int days) {
+        BigDecimal cost = v.getCategory().calculateCost(v.getDailyRate(), days);
+        BigDecimal deposit = v.getCategory().calculateDeposit(v.getDeposit(), r.getKind());
 
-        if (v.getCategory() == VehicleClass.ECONOMY) {
-            cost = v.getDailyRate().multiply(BigDecimal.valueOf(days));
-            deposit = v.getDeposit();
-            if (r.getKind() == RenterType.MEMBER) {
-                deposit = BigDecimal.ZERO;
-            }
-            v.rentOut();
-            System.out.println("Rented " + v.getModel() + " (" + v.getReg() + ") to " + r.getName()
-                    + " for " + days + " days, cost GHS " + cost.setScale(2, RoundingMode.HALF_UP)
-                    + ", deposit GHS " + deposit.setScale(2, RoundingMode.HALF_UP));
-        } else if (v.getCategory() == VehicleClass.PREMIUM) {
-            cost = v.getDailyRate().multiply(BigDecimal.valueOf(days));
-            deposit = v.getDeposit();
-            if (r.getKind() == RenterType.MEMBER) {
-                deposit = BigDecimal.ZERO;
-            }
-            v.rentOut();
-            System.out.println("Rented " + v.getModel() + " (" + v.getReg() + ") to " + r.getName()
-                    + " for " + days + " days, cost GHS " + cost.setScale(2, RoundingMode.HALF_UP)
-                    + ", deposit GHS " + deposit.setScale(2, RoundingMode.HALF_UP));
-        }
+        v.rentOut();
         r.addHistoryEntry("Rented " + v.getModel());
-        rentals.add(new Rental(r.getName(), v.getReg(), days, cost, deposit));
+        Rental rental = new Rental(r, v, days, cost, deposit);
+        rentals.add(rental);
+        return rental;
     }
 
     public void returnVehicle(Vehicle v) {
         v.giveBack();
         for (Rental rt : rentals) {
-            if (rt.getVehicleReg().equals(v.getReg()) && rt.isActive()) {
+            if (rt.getVehicle().equals(v) && rt.isActive()) {
                 rt.markReturned();
-            }
-        }
-        System.out.println("Returned " + v.getModel() + " (" + v.getReg() + ")");
-    }
-
-    public void printReport() {
-        System.out.println();
-        System.out.println("=== " + name + " - end of day ===");
-        System.out.println("Fleet status:");
-        for (Vehicle v : vehicles) {
-            System.out.println("  " + v.getModel() + " (" + v.getReg() + ", " + v.getCategory() + "): " + v.getStatus());
-        }
-        System.out.println("Active rentals:");
-        for (Rental rt : rentals) {
-            if (rt.isActive()) {
-                System.out.println("  Rental #" + rt.getId() + ": " + rt.getVehicleReg() + " -> " + rt.getRenterName()
-                        + " (" + rt.getDays() + " days)");
             }
         }
     }
