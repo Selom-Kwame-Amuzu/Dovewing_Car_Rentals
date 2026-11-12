@@ -13,6 +13,12 @@ public class Renter {
     private final List<String> history = new ArrayList<>();
 
     public Renter(String name, RenterType kind) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name must not be null or blank");
+        }
+        if (kind == null) {
+            throw new IllegalArgumentException("kind must not be null");
+        }
         this.id = nextId++;
         this.name = name;
         this.kind = kind;

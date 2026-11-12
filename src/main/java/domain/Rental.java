@@ -14,6 +14,21 @@ public class Rental {
     private RentalStatus status;
 
     public Rental(Renter renter, Vehicle vehicle, int days, BigDecimal cost, BigDecimal deposit) {
+        if (renter == null) {
+            throw new IllegalArgumentException("renter must not be null");
+        }
+        if (vehicle == null) {
+            throw new IllegalArgumentException("vehicle must not be null");
+        }
+        if (days <= 0) {
+            throw new IllegalArgumentException("days must be greater than zero");
+        }
+        if (cost == null || cost.signum() < 0) {
+            throw new IllegalArgumentException("cost must not be negative");
+        }
+        if (deposit == null || deposit.signum() < 0) {
+            throw new IllegalArgumentException("deposit must not be negative");
+        }
         this.id = nextId++;
         this.renter = renter;
         this.vehicle = vehicle;

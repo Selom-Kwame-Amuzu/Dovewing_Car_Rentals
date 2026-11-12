@@ -14,6 +14,21 @@ public class Vehicle {
     private VehicleStatus status;
 
     public Vehicle(String model, String reg, BigDecimal dailyRate, BigDecimal deposit, VehicleClass category) {
+        if (model == null || model.isBlank()) {
+            throw new IllegalArgumentException("model must not be null or blank");
+        }
+        if (reg == null || reg.isBlank()) {
+            throw new IllegalArgumentException("registration must not be null or blank");
+        }
+        if (dailyRate == null || dailyRate.signum() <= 0) {
+            throw new IllegalArgumentException("daily rate must be greater than zero");
+        }
+        if (deposit == null || deposit.signum() < 0) {
+            throw new IllegalArgumentException("deposit must not be negative");
+        }
+        if (category == null) {
+            throw new IllegalArgumentException("category must not be null");
+        }
         this.id = nextId++;
         this.model = model;
         this.reg = reg;
