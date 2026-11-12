@@ -3,9 +3,10 @@ package domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Renter {
-    private static int nextId = 1;
+    private static final AtomicInteger nextId = new AtomicInteger(1);
 
     private final int id;
     private final String name;
@@ -19,7 +20,7 @@ public class Renter {
         if (kind == null) {
             throw new IllegalArgumentException("kind must not be null");
         }
-        this.id = nextId++;
+        this.id = nextId.getAndIncrement();
         this.name = name;
         this.kind = kind;
     }

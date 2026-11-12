@@ -1,9 +1,10 @@
 package domain;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Rental {
-    private static int nextId = 1;
+    private static final AtomicInteger nextId = new AtomicInteger(1);
 
     private final int id;
     private final Renter renter;
@@ -29,7 +30,7 @@ public class Rental {
         if (deposit == null || deposit.signum() < 0) {
             throw new IllegalArgumentException("deposit must not be negative");
         }
-        this.id = nextId++;
+        this.id = nextId.getAndIncrement();
         this.renter = renter;
         this.vehicle = vehicle;
         this.days = days;

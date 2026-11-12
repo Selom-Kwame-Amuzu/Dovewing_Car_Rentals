@@ -1,9 +1,10 @@
 package domain;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Vehicle {
-    private static int nextId = 1;
+    private static final AtomicInteger nextId = new AtomicInteger(1);
 
     private final int id;
     private final String model;
@@ -29,7 +30,7 @@ public class Vehicle {
         if (category == null) {
             throw new IllegalArgumentException("category must not be null");
         }
-        this.id = nextId++;
+        this.id = nextId.getAndIncrement();
         this.model = model;
         this.reg = reg;
         this.dailyRate = dailyRate;
