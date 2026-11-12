@@ -38,6 +38,11 @@ public class ReportPrinter {
                         + rt.getRenter().getName() + " (" + rt.getDays() + " days)");
             }
         }
+        System.out.println("End-of-day summary:");
+        System.out.println("  Total revenue: GHS " + format(depot.getTotalRevenue()));
+        System.out.println("  Outstanding deposits: GHS " + format(depot.getOutstandingDeposits()));
+        System.out.println("  Active rentals: " + depot.getActiveRentalCount());
+        System.out.println("  Available vehicles: " + depot.getAvailableVehicleCount());
     }
 
     private String format(BigDecimal amount) {

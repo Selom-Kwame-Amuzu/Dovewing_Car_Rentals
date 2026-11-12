@@ -138,21 +138,11 @@ Returned Toyota Prado (GR-5678-22)
 Cannot rent: Toyota Vitz (GT-1234-20) is not available for rent
 ```
 
-The end-of-day report then lists all three vehicles, including the `VAN`, and
-the one rental that is still active.
+The end-of-day report then lists all three vehicles, including the `VAN`, the
+one rental that is still active, and a short summary of total revenue,
+outstanding deposits, and fleet availability.
 
 Rejecting the second Vitz booking is the only intentional behaviour change from
 the original program. The original reported success for both bookings, which is
 the double-booking defect described first in the diagnosis.
 
-## Deliberately not done
-
-- **Test isolation for ids.** `AtomicInteger` makes ids thread-safe, but the
-  counters are still static and shared per JVM, so a test suite that asserts on
-  ids would depend on test order. Fixing that properly means scoping the
-  sequence to an owner or injecting a generator.
-- **Stronger renter identity.** Renters are unique by name. A phone number,
-  email address, or Ghana Card number would be a better business key.
-- **Persistence.** Everything lives in memory and resets when the program exits.
-- **A test suite.** The domain rules are now separable enough to test, but no
-  tests have been added yet.

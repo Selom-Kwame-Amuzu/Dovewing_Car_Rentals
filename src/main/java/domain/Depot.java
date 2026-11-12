@@ -101,4 +101,29 @@ public class Depot {
         rental.markReturned();
         return rental;
     }
+
+    public BigDecimal getTotalRevenue() {
+        return rentals.stream()
+                .map(Rental::getCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getOutstandingDeposits() {
+        return rentals.stream()
+                .filter(Rental::isActive)
+                .map(Rental::getDeposit)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public long getActiveRentalCount() {
+        return rentals.stream()
+                .filter(Rental::isActive)
+                .count();
+    }
+
+    public long getAvailableVehicleCount() {
+        return vehicles.stream()
+                .filter(Vehicle::isAvailable)
+                .count();
+    }
 }
